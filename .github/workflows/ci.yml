@@ -5,11 +5,21 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
     - uses: actions/checkout@v4
+    - run: |
+        sudo apt-get update && sudo apt-get install -y libreoffice libreoffice-l10n-de
     - uses: actions/setup-python@v5
       with:
         python-version: '3.13' 
     - run: python create-fods.py samples/data-types.json data-types.fods
     - run: python create-fods.py samples/accounts.json accounts.fods
+
+    - run: |
+        libreoffice --headless --convert-to csv:"Text - txt - csv (StarCalc)":"44,34,76,1,,1031,true,true" data-types.fods --outdir .
+
+    - run: |
+        libreoffice --headless --convert-to csv:"Text - txt - csv (StarCalc)":"44,34,76,1,,1031,true,true" accounts.fods --outdir .
+
+    - run: cat *.csv
