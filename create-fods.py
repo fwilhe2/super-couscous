@@ -129,15 +129,16 @@ def add_content(spreadsheet_data, spreadsheet_element):
         for cell in row:
             if isinstance(cell, dict):
                 value_type = cell.get("valueType", "string")
+                value = cell.get("value", "")
                 attributes = {
                     'office:value-type': value_type,
                     'calcext:value-type': value_type,
                 }
                 if value_type == 'float':
-                    attributes['office:value'] = cell.get("value", "")
+                    attributes['office:value'] = value
                     attributes['table:style-name'] = "FLOAT_STYLE"
                 elif value_type == 'date':
-                    attributes['office:date-value'] = cell.get("value", "")
+                    attributes['office:date-value'] = value
                     attributes['table:style-name'] = "DATE_STYLE"
                 elif value_type == 'time':
                     time = cell.get("value")
@@ -146,20 +147,18 @@ def add_content(spreadsheet_data, spreadsheet_element):
                     attributes['office:time-value'] = f"PT{components[0]}H{components[1]}M{components[2]}S"
                     attributes['table:style-name'] = "TIME_STYLE"
                 elif value_type == 'currency':
-                    attributes['office:value'] = cell.get("value", "")
+                    attributes['office:value'] = value
                     attributes['office:currency'] = "EUR"  # Hardcoded for now
                     attributes['table:style-name'] = "EUR_STYLE"
                 elif value_type == 'percentage':
-                    attributes['office:value'] = cell.get("value", "")
+                    attributes['office:value'] = value
                     attributes['table:style-name'] = "PERCENTAGE_STYLE"
-                    attributes['office:value-type'] = "percentage"
-                    attributes['calcext:value-type'] = "percentage"
                 else:
-                    attributes['office:value'] = cell.get("value", "")
+                    attributes['office:value'] = value
 
                 table_cell = ET.SubElement(table_row, 'table:table-cell', attributes)
                 text_p = ET.SubElement(table_cell, 'text:p')
-                text_p.text = cell.get("value", "")
+                text_p.text = value
             else:
                 table_cell = ET.SubElement(table_row, 'table:table-cell', {
                     'office:value-type': 'string'
