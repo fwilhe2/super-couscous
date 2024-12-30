@@ -6,17 +6,15 @@ on:
 jobs:
   build:
     runs-on: ubuntu-24.04
+    container: debian:trixie
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-python@v5
-      with:
-        python-version: '3.13' 
+    - uses: actions/checkout@v4 
     - name: Install LibreOffice
       run: |
-        sudo apt-get update && sudo apt-get install -y libreoffice libreoffice-l10n-de
+        apt-get update && apt-get install -y --no-install-recommends libreoffice-calc-nogui python3-minimal
 
-    - run: python create-fods.py samples/data-types.json data-types.fods
-    - run: python create-fods.py samples/accounts.json accounts.fods
+    - run: python3 create-fods.py samples/data-types.json data-types.fods
+    - run: python3 create-fods.py samples/accounts.json accounts.fods
 
     - name: Convert to csv via LibreOffice to test if it can read the files (data-types)
       run: |
