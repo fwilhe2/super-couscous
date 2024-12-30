@@ -13,8 +13,8 @@ jobs:
       run: |
         apt-get update && apt-get install -y --no-install-recommends libreoffice-calc-nogui python3
 
-    - run: python create-fods.py samples/data-types.json data-types.fods
-    - run: python create-fods.py samples/accounts.json accounts.fods
+    - run: python3 create-fods.py samples/data-types.json data-types.fods
+    - run: python3 create-fods.py samples/accounts.json accounts.fods
 
     - name: Convert to csv via LibreOffice to test if it can read the files (data-types)
       run: |
