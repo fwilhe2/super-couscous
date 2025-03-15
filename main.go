@@ -5,6 +5,7 @@ import (
 	"encoding/xml"
 	"fmt"
 	"os"
+	"flag"
 )
 
 type Cell struct {
@@ -363,60 +364,26 @@ func createStyles() []Style {
 }
 
 func main() {
-	jsonData := `[
-        [
-            "String",
-            "Float",
-            "Negative Float",
-            "Date",
-            "Time",
-            "Currency",
-            "Negative Currency",
-            "Percentage"
-        ],
-        [
-            {
-                "value": "ABBA",
-                "valueType": "string"
-            },
-            {
-                "value": "42.3324",
-                "valueType": "float"
-            },
-            {
-                "value": "-23.42",
-                "valueType": "float"
-            },
-            {
-                "value": "2022-02-02",
-                "valueType": "date"
-            },
-            {
-                "value": "19:03:00",
-                "valueType": "time"
-            },
-            {
-                "value": "2.22",
-                "valueType": "currency"
-            },
-            {
-                "value": "-3.3333",
-                "valueType": "currency"
-            },
-            {
-                "value": "0.4223",
-                "valueType": "percentage"
-            }
-        ]
-    ]`
 
-	fods, err := jsonToFODS(jsonData)
+	inputFile := flag.String("input", "", "a string")
+	outputFile := flag.String("output", "", "a string")
+
+	flag.Parse()
+
+	dat, err := os.ReadFile(*inputFile)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	fmt.Print(string(dat))
+
+	fods, err := jsonToFODS(string(dat))
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
 	}
 
-	file, err := os.Create("output.fods")
+	file, err := os.Create(*outputFile)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
